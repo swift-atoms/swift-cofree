@@ -1,4 +1,4 @@
-import Cofree_Derivation_Core
+import Cofree_Macro_Core
 import SwiftSyntax
 import SwiftSyntaxMacros
 
