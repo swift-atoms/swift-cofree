@@ -10,14 +10,14 @@ let package = Package(
         .library(name: "Cofree Macro Core", targets: ["Cofree Macro Core"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-atoms/swift-base-functor.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-functor.git", branch: "main"),
         .package(url: "https://github.com/swiftlang/swift-syntax.git", "603.0.2"..<"604.0.0"),
     ],
     targets: [
         .target(
             name: "Cofree Macro Core",
             dependencies: [
-                .product(name: "Base Functor Macro Core", package: "swift-base-functor"),
+                .product(name: "Functor Base Macro Core", package: "swift-functor"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
             ]
