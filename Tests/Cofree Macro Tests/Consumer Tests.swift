@@ -1,6 +1,8 @@
+import Functor_Base_Macro
 import Cofree_Macro
 import Testing
 
+@FunctorBase
 @Cofree
 private indirect enum Natural {
     case zero
