@@ -1,15 +1,26 @@
+import Type_Algebra_Syntax
 public import SwiftSyntax
 import SwiftSyntaxBuilder
 
 public enum Derivation {
     public static func expansion(of declaration: EnumDeclSyntax) -> [DeclSyntax] {
-        let access = declaration.modifiers.contains {
-            $0.name.tokenKind == .keyword(.public)
-        } ? "public " : ""
+        do { return try derive(declaration) }
+        catch { return [DeclSyntax(stringLiteral: "#error(\(String(reflecting: String(describing: error))))")] }
+    }
+
+    private static func derive(_ declaration: EnumDeclSyntax) throws -> [DeclSyntax] {
+        let variable = Type.Variable("Recursion")
+        let layer = try Type.Syntax.Recursion.polynomial(of: declaration, variable: variable)
+        let carrier = try Type.Recursion.cofree(layer: layer.expression, variable: variable, observing: .atom(.init("Value")))
+
+        let representation = Type.Syntax.Interpretation(
+            atoms: [.init("Value"): TypeSyntax(stringLiteral: "Value")],
+            representations: [layer.expression: TypeSyntax(stringLiteral: "Base<Cofree<Value>>")])
+        let access = Type.Syntax.Recursion.access(of: declaration)
 
         return ["""
             \(raw: access)indirect enum Cofree<Value> {
-                case cofree(Value, Base<Cofree<Value>>)
+                case cofree\(try representation.type(carrier.body))
 
                 \(raw: access)var extract: Value {
                     switch self { case .cofree(let value, _): return value }
