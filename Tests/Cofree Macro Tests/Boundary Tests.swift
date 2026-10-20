@@ -1,5 +1,5 @@
-import Functor_Base_Macro
 import Cofree_Macro
+import Functor_Base_Macro
 import Testing
 
 @FunctorBase
@@ -11,14 +11,17 @@ private indirect enum Count {
 
 private func annotations(_ value: Count.Cofree<Int>) -> [Int] {
     switch value {
-    case let .cofree(number, .zero): [number]
-    case let .cofree(number, .successor(child)): [number] + annotations(child)
+    case .cofree(let number, .zero): [number]
+    case .cofree(let number, .successor(let child)): [number] + annotations(child)
     }
 }
 
 @Suite
 struct `Cofree boundaries` {
-    fileprivate let two = Count.Cofree<Int>.cofree(2, .successor(.cofree(1, .successor(.cofree(0, .zero)))))
+    fileprivate let two = Count.Cofree<Int>.cofree(
+        2,
+        .successor(.cofree(1, .successor(.cofree(0, .zero))))
+    )
 
     @Test
     func `extract returns the outermost annotation`() {

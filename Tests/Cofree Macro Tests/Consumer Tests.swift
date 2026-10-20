@@ -1,5 +1,5 @@
-import Functor_Base_Macro
 import Cofree_Macro
+import Functor_Base_Macro
 import Testing
 
 @FunctorBase
@@ -13,7 +13,7 @@ private indirect enum Natural {
 func `cofree carrier pairs annotation with a recursive layer`() {
     let tail = Natural.Cofree<Int>.cofree(0, .zero)
     let value = Natural.Cofree<Int>.cofree(1, .successor(tail))
-    guard case let .cofree(number, .successor(.cofree(child, .zero))) = value else {
+    guard case .cofree(let number, .successor(.cofree(let child, .zero))) = value else {
         Issue.record("Expected annotated successor")
         return
     }
