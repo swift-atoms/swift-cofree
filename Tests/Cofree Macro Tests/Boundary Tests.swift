@@ -16,31 +16,35 @@ private func annotations(_ value: Count.Cofree<Int>) -> [Int] {
     }
 }
 
-@Suite
-struct `Cofree boundaries` {
-    fileprivate let two = Count.Cofree<Int>.cofree(
-        2,
-        .successor(.cofree(1, .successor(.cofree(0, .zero))))
-    )
+enum `Boundary Tests` {}
 
-    @Test
-    func `extract returns the outermost annotation`() {
-        #expect(two.extract == 2)
-        #expect(Count.Cofree<Int>.cofree(7, .zero).extract == 7)
-    }
+extension `Boundary Tests` {
+    @Suite
+    struct `Cofree boundaries` {
+        fileprivate let two = Count.Cofree<Int>.cofree(
+            2,
+            .successor(.cofree(1, .successor(.cofree(0, .zero))))
+        )
 
-    @Test
-    func `map transforms the annotation of every layer`() {
-        #expect(annotations(two.map { $0 * 10 }) == [20, 10, 0])
-    }
+        @Test
+        func `extract returns the outermost annotation`() {
+            #expect(two.extract == 2)
+            #expect(Count.Cofree<Int>.cofree(7, .zero).extract == 7)
+        }
 
-    @Test
-    func `extending with extract changes nothing`() {
-        #expect(annotations(two.extend { $0.extract }) == [2, 1, 0])
-    }
+        @Test
+        func `map transforms the annotation of every layer`() {
+            #expect(annotations(two.map { $0 * 10 }) == [20, 10, 0])
+        }
 
-    @Test
-    func `duplicate annotates each layer with its own subtree`() {
-        #expect(annotations(two.duplicate().map { $0.extract }) == [2, 1, 0])
+        @Test
+        func `extending with extract changes nothing`() {
+            #expect(annotations(two.extend { $0.extract }) == [2, 1, 0])
+        }
+
+        @Test
+        func `duplicate annotates each layer with its own subtree`() {
+            #expect(annotations(two.duplicate().map { $0.extract }) == [2, 1, 0])
+        }
     }
 }
